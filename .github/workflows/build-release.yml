@@ -1,0 +1,119 @@
+name: BuildRelease
+
+on:
+  release:
+    types: [published]
+
+env:
+  REGISTRY: ghcr.io
+  OWNER: larusba
+  VERSION_ALERTS: 1.0.0
+  VERSION_DISCOVERY: 1.0.0
+  VERSION_GATEWAY: 1.0.0
+  VERSION_GDS: 1.0.0
+  VERSION_GRAPH: 1.0.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.13.0'
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Cache local node modules
+        uses: actions/cache@v2
+        with:
+          path: ui/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Cache local node packages
+        uses: actions/cache@v2
+        with:
+          path: ~/npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: Pull test image (JHipster)
+        run: docker pull testcontainersofficial/ryuk:0.3.0
+
+      - name: build commons
+        run: mvn clean install -DskipTests
+        working-directory: commons
+
+      - name: build alerts
+        run: ./mvnw -Pprod -Dcheckstyle.skip clean package verify jib:dockerBuild
+        working-directory: alerts
+
+      - name: build discovery
+        run: ./mvnw -Pprod -Dcheckstyle.skip clean package verify jib:dockerBuild
+        working-directory: discovery
+
+      - name: build gds
+        run: ./mvnw -Pprod -Dcheckstyle.skip clean package verify  jib:dockerBuild
+        working-directory: gds
+
+      - name: build graph
+        run: ./mvnw -Pprod -Dcheckstyle.skip clean package verify jib:dockerBuild
+        working-directory: graph
+
+      - name: build gateway
+        run: ./mvnw -Pprod -Dcheckstyle.skip clean package verify jib:dockerBuild
+        working-directory: gateway
+
+      - name: build nndt
+        run: docker build -f nndt/.dockerfile/flask/dockerfile . -t ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/nndt:${GITHUB_REF##*/}
+
+      - name: install node packages
+        run: npm install
+        working-directory: ui
+
+      - name: build frontend
+        run: |
+          npm run webpack:prod
+          docker build -f ../docker/nginx/Dockerfile . -t ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/nginx:${GITHUB_REF##*/}
+        working-directory: ui
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Tag docker images for push
+        run: |
+          docker image tag galileoxai/alerts:${{ env.VERSION_ALERTS }}          ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/alerts:${GITHUB_REF##*/}
+          docker image tag galileoxai/discovery:${{ env.VERSION_DISCOVERY }}    ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/discovery:${GITHUB_REF##*/}
+          docker image tag galileoxai/gds:${{ env.VERSION_GDS }}                ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/gds:${GITHUB_REF##*/}
+          docker image tag galileoxai/graph:${{ env.VERSION_GRAPH }}            ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/graph:${GITHUB_REF##*/}
+          docker image tag galileoxai/gateway:${{ env.VERSION_GATEWAY }}        ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/gateway:${GITHUB_REF##*/}
+
+      - name: Push Docker images
+        run: |
+          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/alerts:${GITHUB_REF##*/}
+          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/discovery:${GITHUB_REF##*/}
+          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/gds:${GITHUB_REF##*/}
+          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/graph:${GITHUB_REF##*/}
+          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/gateway:${GITHUB_REF##*/}
+          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/nndt
+          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/nginx
+

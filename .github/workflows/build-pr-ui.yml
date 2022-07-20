@@ -1,0 +1,58 @@
+name: BuildUI
+
+on:
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'ui/**'
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'ui/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.13.0'
+
+      - name: Cache local node modules
+        uses: actions/cache@v2
+        with:
+          path: ui/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Cache local node packages
+        uses: actions/cache@v2
+        with:
+          path: ~/npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: install node packages
+        run: npm install
+        working-directory: ui
+
+      - name: build frontend
+        run: npm run webpack:prod
+        working-directory: ui
+
+      - name: jest coverage
+        run:  npm run test
+        working-directory: ui
+
+      - name: sonar scanner
+        run:  npm run sonar-scanner -Dsonar.login=$SONAR_TOKEN
+        working-directory: ui
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_UI_TOKEN }}

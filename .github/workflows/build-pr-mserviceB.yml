@@ -1,0 +1,42 @@
+name: BuildMserviceB
+
+on:
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'mserviceB/**'
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'mserviceB/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Pull test image (JHipster)
+        run: docker pull testcontainersofficial/ryuk:0.3.0
+
+      - name: build mserviceB
+        run: ./mvnw clean package verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN jib:dockerBuild
+        working-directory: mserviceB
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_MSERVICEB_TOKEN }}
