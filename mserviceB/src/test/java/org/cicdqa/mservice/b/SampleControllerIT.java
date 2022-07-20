@@ -1,6 +1,6 @@
-package org.cicdqa.mservice.a.it;
+package org.cicdqa.mservice.b;
 
-import org.cicdqa.mservice.a.rest.SampleController;
+import org.cicdqa.mservice.b.rest.SampleController;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,23 +15,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class MserviceAApplicationIT {
+class SampleControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
 
-	@Test
-	void testHomePage() throws Exception {
+    @Test
+    void testHomePage() throws Exception {
         final SampleController sampleController = new SampleController();
         mockMvc = MockMvcBuilders.standaloneSetup(sampleController).build();
 
-        String homePageMessage = mockMvc.perform(get("/api/a/home"))
+        String homePageMessage = mockMvc.perform(get("/api/b/home"))
             .andExpect(status().isOk())
             .andReturn()
             .getResponse()
             .getContentAsString();
 
-        Assertions.assertEquals("*** Micro-Service A !!! ***", homePageMessage);
-	}
+        Assertions.assertEquals("*** Micro-Service B !!! ***", homePageMessage);
+    }
 
 }

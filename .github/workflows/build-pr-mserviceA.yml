@@ -31,9 +31,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Pull test image (JHipster)
-        run: docker pull testcontainersofficial/ryuk:0.3.0
-
       - name: build mserviceA
         run: ./mvnw clean package verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
         working-directory: mserviceA

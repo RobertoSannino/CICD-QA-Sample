@@ -51,9 +51,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-npm-
 
-      - name: Pull test image (JHipster)
-        run: docker pull testcontainersofficial/ryuk:0.3.0
-
       - name: build mservice_a
         run: ./mvnw clean package verify jib:dockerBuild
         working-directory: mservicea
@@ -83,11 +80,11 @@ jobs:
         run: |
           docker image tag cicdqa/mservicea:${{ env.VERSION_MSERVICE_A }}     ${{ env.REGISTRY }}/${{ env.OWNER }}/cicdqa/mservicea:${GITHUB_REF##*/}
           docker image tag cicdqa/mserviceb:${{ env.VERSION_MSERVICE_B }}     ${{ env.REGISTRY }}/${{ env.OWNER }}/cicdqa/mserviceb:${GITHUB_REF##*/}
-          docker image tag cicdqa/ui:${{ env.VERSION_GATEWAY }}               ${{ env.REGISTRY }}/${{ env.OWNER }}/cicdqa/ui:${GITHUB_REF##*/}
+          docker image tag cicdqa/ui:${{ env.VERSION_UI }}                    ${{ env.REGISTRY }}/${{ env.OWNER }}/cicdqa/ui:${GITHUB_REF##*/}
 
       - name: Push Docker images
         run: |
           docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/cicdqa/mservicea:${GITHUB_REF##*/}
           docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/cicdqa/mserviceb:${GITHUB_REF##*/}
-          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/cicdqa/ui
+          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/cicdqa/ui:${GITHUB_REF##*/}
 

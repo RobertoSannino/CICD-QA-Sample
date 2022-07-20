@@ -2,7 +2,7 @@ version: "2"
 services:
 
   mservicea:
-    image: cicdqa/mservicea:1.0.0
+    image: cicdqa/mservicea:latest
     container_name: mservicea
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
@@ -10,9 +10,11 @@ services:
       - "3010:3010"
     networks:
       - cicdqa
+    labels:
+      - "com.centurylinklabs.watchtower.scope=cicdqa"
 
   mserviceb:
-    image: cicdqa/mserviceb:1.0.0
+    image: cicdqa/mserviceb:latest
     container_name: mserviceb
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
@@ -20,14 +22,33 @@ services:
       - "3020:3020"
     networks:
       - cicdqa
+    labels:
+      - "com.centurylinklabs.watchtower.scope=cicdqa"
 
   ui:
-    image: cicdqa/ui:1.0.0
+    image: cicdqa/ui:latest
     container_name: ui
     ports:
       - "3000:80"
     networks:
       - cicdqa
+    labels:
+      - "com.centurylinklabs.watchtower.scope=cicdqa"
+
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.docker/config.json:/config.json
+    command:
+      --scope cicdqa --trace --run-once
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=60 # every minute
+      - WATCHTOWER_INCLUDE_STOPPED=true
+    labels:
+      - "com.centurylinklabs.watchtower.scope=cicdqa"
 
 networks:
   cicdqa:
