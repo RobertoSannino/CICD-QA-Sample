@@ -25,7 +25,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "sonar-scanner": "node_modules/sonar-scanner/bin/sonar-scanner",
-    "test-sonar": "npm test -- --watchAll=false --env=jsdom --testResultsProcessor ./node_modules/jest-sonar-reporter/index.js"
+    "test-sonar": "npm test -- --coverage --watchAll=false --env=jsdom --testResultsProcessor ./node_modules/jest-sonar-reporter/index.js"
   },
   "jestSonar": {
     "reportPath": "reports",
