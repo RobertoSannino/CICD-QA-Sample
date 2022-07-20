@@ -35,7 +35,7 @@ jobs:
         run: docker pull testcontainersofficial/ryuk:0.3.0
 
       - name: build mserviceB
-        run: ./mvnw clean package verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN jib:dockerBuild
+        run: ./mvnw clean package verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
         working-directory: mserviceB
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
