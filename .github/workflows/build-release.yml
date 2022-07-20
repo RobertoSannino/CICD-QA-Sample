@@ -7,11 +7,9 @@ on:
 env:
   REGISTRY: ghcr.io
   OWNER: larusba
-  VERSION_ALERTS: 1.0.0
-  VERSION_DISCOVERY: 1.0.0
-  VERSION_GATEWAY: 1.0.0
-  VERSION_GDS: 1.0.0
-  VERSION_GRAPH: 1.0.0
+  VERSION_MSERVICE_A: 1.0.0
+  VERSION_MSERVICE_B: 1.0.0
+  VERSION_UI: 1.0.0
 
 jobs:
   build:
@@ -56,32 +54,13 @@ jobs:
       - name: Pull test image (JHipster)
         run: docker pull testcontainersofficial/ryuk:0.3.0
 
-      - name: build commons
-        run: mvn clean install -DskipTests
-        working-directory: commons
+      - name: build mservice_a
+        run: ./mvnw clean package verify jib:dockerBuild
+        working-directory: mservicea
 
-      - name: build alerts
-        run: ./mvnw -Pprod -Dcheckstyle.skip clean package verify jib:dockerBuild
-        working-directory: alerts
-
-      - name: build discovery
-        run: ./mvnw -Pprod -Dcheckstyle.skip clean package verify jib:dockerBuild
-        working-directory: discovery
-
-      - name: build gds
-        run: ./mvnw -Pprod -Dcheckstyle.skip clean package verify  jib:dockerBuild
-        working-directory: gds
-
-      - name: build graph
-        run: ./mvnw -Pprod -Dcheckstyle.skip clean package verify jib:dockerBuild
-        working-directory: graph
-
-      - name: build gateway
-        run: ./mvnw -Pprod -Dcheckstyle.skip clean package verify jib:dockerBuild
-        working-directory: gateway
-
-      - name: build nndt
-        run: docker build -f nndt/.dockerfile/flask/dockerfile . -t ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/nndt:${GITHUB_REF##*/}
+      - name: build mservice_b
+        run: ./mvnw clean package verify jib:dockerBuild
+        working-directory: mserviceb
 
       - name: install node packages
         run: npm install
@@ -89,8 +68,8 @@ jobs:
 
       - name: build frontend
         run: |
-          npm run webpack:prod
-          docker build -f ../docker/nginx/Dockerfile . -t ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/nginx:${GITHUB_REF##*/}
+          npm run build
+          docker build -f deploy/nginx/ui-dockerfile . -t cicdqa/ui:${{ env.VERSION_UI }}
         working-directory: ui
 
       - name: Log in to the Container registry
@@ -99,21 +78,16 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Tag docker images for push
         run: |
-          docker image tag galileoxai/alerts:${{ env.VERSION_ALERTS }}          ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/alerts:${GITHUB_REF##*/}
-          docker image tag galileoxai/discovery:${{ env.VERSION_DISCOVERY }}    ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/discovery:${GITHUB_REF##*/}
-          docker image tag galileoxai/gds:${{ env.VERSION_GDS }}                ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/gds:${GITHUB_REF##*/}
-          docker image tag galileoxai/graph:${{ env.VERSION_GRAPH }}            ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/graph:${GITHUB_REF##*/}
-          docker image tag galileoxai/gateway:${{ env.VERSION_GATEWAY }}        ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/gateway:${GITHUB_REF##*/}
+          docker image tag cicdqa/mservicea:${{ env.VERSION_MSERVICE_A }}     ${{ env.REGISTRY }}/${{ env.OWNER }}/cicdqa/mservicea:${GITHUB_REF##*/}
+          docker image tag cicdqa/mserviceb:${{ env.VERSION_MSERVICE_B }}     ${{ env.REGISTRY }}/${{ env.OWNER }}/cicdqa/mserviceb:${GITHUB_REF##*/}
+          docker image tag cicdqa/ui:${{ env.VERSION_GATEWAY }}               ${{ env.REGISTRY }}/${{ env.OWNER }}/cicdqa/ui:${GITHUB_REF##*/}
 
       - name: Push Docker images
         run: |
-          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/alerts:${GITHUB_REF##*/}
-          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/discovery:${GITHUB_REF##*/}
-          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/gds:${GITHUB_REF##*/}
-          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/graph:${GITHUB_REF##*/}
-          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/gateway:${GITHUB_REF##*/}
-          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/nndt
-          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/galileoxai/nginx
+          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/cicdqa/mservicea:${GITHUB_REF##*/}
+          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/cicdqa/mserviceb:${GITHUB_REF##*/}
+          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/cicdqa/ui
 
