@@ -25,9 +25,6 @@
     "eject": "react-scripts eject",
     "sonar-scanner": "node_modules/sonar-scanner/bin/sonar-scanner"
   },
-  "jest": {
-    "testResultsProcessor": "jest-sonar-reporter"
-  },
   "jestSonar": {
     "reportPath": "reports",
     "reportFile": "test-reporter.xml",
