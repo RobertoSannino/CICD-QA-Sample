@@ -1,4 +1,4 @@
-package org.cicdqa.mservice.a;
+package org.cicdqa.mservice.a.it;
 
 import org.cicdqa.mservice.a.rest.SampleController;
 import org.junit.jupiter.api.Assertions;
@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class MserviceAApplicationTests {
+class MserviceAApplicationIT {
 
     @Autowired
     private MockMvc mockMvc;

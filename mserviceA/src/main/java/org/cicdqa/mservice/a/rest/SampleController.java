@@ -1,5 +1,6 @@
 package org.cicdqa.mservice.a.rest;
 
+import org.cicdqa.mservice.a.utils.MessageUtil;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ public class SampleController {
 
     @GetMapping("/home")
     public String homePage() {
-        return "*** Micro-Service A!!! ***";
+        return MessageUtil.getHomeMessage("A");
     }
+
 }
