@@ -43,7 +43,7 @@ jobs:
         working-directory: ui
 
       - name: jest coverage
-        run: npm run test
+        run: npm run test-sonar
         working-directory: ui
 
       - name: build frontend

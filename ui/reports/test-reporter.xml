@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+    <file path="/Users/roberto/Projects/CICD-QA-Sample/ui/src/test/App.test.tsx">
+        <testCase name="renders mservice A and B text" duration="43"/>
+    </file>
+</testExecutions>
