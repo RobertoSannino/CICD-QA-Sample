@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/api/b")
+@CrossOrigin({"http://localhost","http://localhost:3000"})
 public class SampleController {
 
     @GetMapping("/home")

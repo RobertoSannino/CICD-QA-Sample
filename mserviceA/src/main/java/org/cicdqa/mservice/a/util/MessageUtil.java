@@ -1,4 +1,4 @@
-package org.cicdqa.mservice.a.utils;
+package org.cicdqa.mservice.a.util;
 
 public class MessageUtil {
 
