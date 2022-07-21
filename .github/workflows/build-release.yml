@@ -71,8 +71,8 @@ jobs:
       - name: build frontend
         run: |
           npm run build
-          docker build -f deploy/nginx/ui-dockerfile . -t cicdqa/ui:${{ env.VERSION_UI }}
-        working-directory: /
+          docker build -f ../deploy/nginx/ui-dockerfile . -t cicdqa/ui:${{ env.VERSION_UI }}
+        working-directory: ui
 
       - name: Log in to the Container registry
         uses: docker/login-action@v1
