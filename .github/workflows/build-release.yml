@@ -68,11 +68,12 @@ jobs:
         run: npm run test-sonar
         working-directory: ui
 
-      - name: build frontend
-        run: |
-          npm run build
-          docker build -f ../deploy/nginx/ui-dockerfile-runner . -t cicdqa/ui:${{ env.VERSION_UI }}
+      - name: build ui
+        run: npm run build
         working-directory: ui
+
+      - name: build ui docker image
+        run: docker build -f ../deploy/nginx/ui-dockerfile . -t cicdqa/ui:${{ env.VERSION_UI }}
 
       - name: Log in to the Container registry
         uses: docker/login-action@v1
