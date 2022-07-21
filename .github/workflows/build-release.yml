@@ -6,7 +6,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  OWNER: larusba
+  OWNER: RobertoSannino
+  # GH_PROJECT_NAME: CICD-QA-Sample
   VERSION_MSERVICE_A: 1.0.0
   VERSION_MSERVICE_B: 1.0.0
   VERSION_UI: 1.0.0
@@ -53,14 +54,18 @@ jobs:
 
       - name: build mservice_a
         run: ./mvnw clean package verify jib:dockerBuild
-        working-directory: mservicea
+        working-directory: mserviceA
 
       - name: build mservice_b
         run: ./mvnw clean package verify jib:dockerBuild
-        working-directory: mserviceb
+        working-directory: mserviceB
 
       - name: install node packages
         run: npm install
+        working-directory: ui
+
+      - name: jest coverage
+        run: npm run test-sonar
         working-directory: ui
 
       - name: build frontend
