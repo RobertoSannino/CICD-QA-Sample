@@ -51,10 +51,12 @@ images on the GitHub ghcr.io registry
 - DEV_ENV docker:
     - change watchtower service volumes to match your folder structure 
       in deploy/docker-compose-dev-env.yml
+    - run `docker login ghcr.io/robertosannino`  
     - from the deploy folder, run
       `docker-compose -f docker-compose-dev-env.yml` 
 - **PROD** docker    
     - change watchtower service volumes to match your folder structure
       in deploy/docker-compose-prod.yml
+    - run `docker login ghcr.io/robertosannino`  
     - from the deploy folder, run
       `docker-compose -f docker-compose-prod.yml` 
