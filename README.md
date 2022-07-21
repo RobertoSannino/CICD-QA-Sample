@@ -5,7 +5,7 @@ The project consists of two Java Spring-Boot micro-services and a React UI
 
 **Project structure:**
 - .github       (GitHub Actions for PRs and Product Release)
-- deploy        (docker-build and docker-compose)
+- deploy        (project-build and docker-compose files)
 - deploy/nginx  (nginx proxy Dockerfile and site.conf proxy configuration)
 - mserviceA     (Spring-Boot Java BE micro-service)
 - mserviceB     (Spring-Boot Java BE micro-service)
@@ -17,14 +17,15 @@ The project consists of two Java Spring-Boot micro-services and a React UI
   integration tests must end with *IT
 - the docker build is performed using jib with eclipse-temurin:11-jre-focal
   as base docker image
-- env variables are configures through application.properties
+- env variables are configured through application.properties
 
 **React UI:**
 - react 18.0.9
 - tests are performed using jest and reported by jest-sonar-scanner
 - the docker build is performed using nginx:1.15-alpine as base 
-  docker image, AOT build and nginx site.conf are copied in the base
-  image using a Dockerfile (ui-dockerfile)
+  docker image, AOT build is copied in the base
+  image using a Dockerfile (ui-dockerfile), while the site.conf for nginx proxy
+  is passed through volume definition in the docker-compose
 
 **Sonar Cloud:**
 - projects have been created manually in the Sonar Cloud web platform
@@ -33,22 +34,27 @@ The project consists of two Java Spring-Boot micro-services and a React UI
 
 **GitHub Actions:**
 - configured programmatically in .github/workflows
-- triggered by PRs and push on the **main** branch
-- perform tests run, build and sonar analysis
-- release workflow triggered by a new GitHub Release of the project,
-  also deploys docker images in the GitHub docker image repository (ghcr.io)
+- triggered by PRs and push on the **main** branch, push on specific branch
+  and published release
+- perform tests run, build, sonar analysis and optionally pusblish docker
+images on the GitHub ghcr.io registry
 
 **Run Project**
-- DEV mvn + npm
+- LOCAL mvn + npm
     - from the mserviceA foler, run `mvn spring-boot:run`
     - from the mserviceB foler, run `mvn spring-boot:run`
     - from the ui folder, run `npm install`, then, `npm start`
-- DEV docker:
-    - from the deploy folder, run `./build.sh`
+- LOCAL docker:
+    - from the deploy folder, run `./build.sh` or `./build-no-test.sh`
     - from the deploy folder, run
       `docker-compose -f docker-compose-local.yml`
+- DEV_ENV docker:
+    - change watchtower service volumes to match your folder structure 
+      in deploy/docker-compose-dev-env.yml
+    - from the deploy folder, run
+      `docker-compose -f docker-compose-dev-env.yml` 
 - **PROD** docker    
     - change watchtower service volumes to match your folder structure
-      in deploy/docker-compose-prod 
+      in deploy/docker-compose-prod.yml
     - from the deploy folder, run
-      `docker-compose -f docker-compose-prod.yml`
+      `docker-compose -f docker-compose-prod.yml` 

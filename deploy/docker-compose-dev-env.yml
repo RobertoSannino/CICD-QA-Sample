@@ -2,7 +2,7 @@ version: "2"
 services:
 
   mservicea:
-    image: ghcr.io/robertosannino/cicdqa/mservicea:1.0.0-release
+    image: ghcr.io/robertosannino/cicdqa/dev/mservicea:1.0.0
     container_name: mservicea
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
@@ -14,7 +14,7 @@ services:
       - "com.centurylinklabs.watchtower.scope=cicdqa"
 
   mserviceb:
-    image: ghcr.io/robertosannino/cicdqa/mserviceb:1.0.0-release
+    image: ghcr.io/robertosannino/cicdqa/dev/mserviceb:1.0.0
     container_name: mserviceb
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
@@ -26,7 +26,7 @@ services:
       - "com.centurylinklabs.watchtower.scope=cicdqa"
 
   ui:
-    image: ghcr.io/robertosannino/cicdqa/ui:1.0.0-release
+    image: ghcr.io/robertosannino/cicdqa/dev/ui:1.0.0
     container_name: ui
     ports:
       - "3000:80"
@@ -47,7 +47,7 @@ services:
       --scope cicdqa
     environment:
       - WATCHTOWER_CLEANUP=true
-      - WATCHTOWER_SCHEDULE=0 0 0 * * 0 # Run once a week, midnight between Sat/Sun
+      - WATCHTOWER_POLL_INTERVAL=60 # every minute
       - WATCHTOWER_INCLUDE_STOPPED=true
     labels:
       - "com.centurylinklabs.watchtower.scope=cicdqa"
