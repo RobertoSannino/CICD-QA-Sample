@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class MserviceAApplication {
 
 	public static void main(String[] args) {
-		//test
+		//test commit
 		SpringApplication.run(MserviceAApplication.class, args);
 	}
 
