@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin({"http://localhost","http://localhost:3000"})
 public class SampleController {
 
+    // test pr
+
     @GetMapping("/home")
     public String homePage() {
         return "*** Micro-Service B !!! ***";
