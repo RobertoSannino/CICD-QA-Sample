@@ -89,6 +89,6 @@ jobs:
       - name: Push Docker images
         run: |
           docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/cicdqa/dev/mservicea:${{ env.VERSION_MSERVICE_A }}
-          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/cicdqa/dev/mserviceb:${{ env.VERSION_MSERVICE_B }}}
+          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/cicdqa/dev/mserviceb:${{ env.VERSION_MSERVICE_B }}
           docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/cicdqa/dev/ui:${{ env.VERSION_UI }}
 
