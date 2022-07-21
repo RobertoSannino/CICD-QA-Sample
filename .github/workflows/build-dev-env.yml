@@ -7,7 +7,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  OWNER: RobertoSannino
+  OWNER: robertosannino
   # GH_PROJECT_NAME: CICD-QA-Sample
   VERSION_MSERVICE_A: 1.0.0
   VERSION_MSERVICE_B: 1.0.0
