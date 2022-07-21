@@ -1,0 +1,40 @@
+version: "2"
+services:
+
+  mservicea:
+    image: cicdqa/mservicea:1.0.0
+    container_name: mservicea
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+    ports:
+      - "3010:3010"
+    networks:
+      - cicdqa
+    labels:
+      - "com.centurylinklabs.watchtower.scope=cicdqa"
+
+  mserviceb:
+    image: cicdqa/mserviceb:1.0.0
+    container_name: mserviceb
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+    ports:
+      - "3020:3020"
+    networks:
+      - cicdqa
+    labels:
+      - "com.centurylinklabs.watchtower.scope=cicdqa"
+
+  ui:
+    image: cicdqa/ui:1.0.0
+    container_name: ui
+    ports:
+      - "3000:80"
+    networks:
+      - cicdqa
+    labels:
+      - "com.centurylinklabs.watchtower.scope=cicdqa"
+
+networks:
+  cicdqa:
+    driver: bridge

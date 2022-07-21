@@ -1,6 +1,8 @@
 {
-  "name": "ui",
+  "name": "ui-cicdqa",
   "version": "1.0.0",
+  "description": "A simple React 18.0.9 UI, with jest tests and Sonar Cloud configuration, that shows the result of two GET on two different micro-services",
+  "keywords": ["react", "react 18", "sonar", "sonarcloud", "jest", "jest-sonar-reporter"],
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
