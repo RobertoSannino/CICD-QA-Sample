@@ -30,6 +30,8 @@ services:
     container_name: ui
     ports:
       - "3000:80"
+    volumes:
+      - ./nginx/site.conf:/etc/nginx/conf.d/default.conf
     networks:
       - cicdqa
     labels:
@@ -42,7 +44,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/folders/.docker/config.json:/config.json   # symbolic link to .docker folder created previously
     command:
-      --scope cicdqa --trace
+      --scope cicdqa
     environment:
       - WATCHTOWER_CLEANUP=true
       - WATCHTOWER_POLL_INTERVAL=60 # every minute
