@@ -13,7 +13,7 @@ class MessageUtilTest {
     @Test
     void testHomeMessage() {
         Assertions.assertEquals(
-            "*** Micro-Service SERVICE_NAME !!! ***",
+            "*** UPDATED: Micro-Service SERVICE_NAME !!! ***",
             MessageUtil.getHomeMessage(SERVICE_NAME)
         );
     }
