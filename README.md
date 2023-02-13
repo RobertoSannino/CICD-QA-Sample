@@ -45,18 +45,18 @@ images on the GitHub ghcr.io registry
     - from the mserviceB foler, run `mvn spring-boot:run`
     - from the ui folder, run `npm install`, then, `npm start`
 - LOCAL docker:
-    - from the deploy folder, run `./build.sh` or `./build-no-test.sh`
+    - from the deploy folder, run `./build.sh`/`./build-m1.sh` or `./build-no-test.sh`/`./build-no-test-m1.sh`
     - from the deploy folder, run
       `docker-compose -f docker-compose-local.yml`
 - DEV_ENV docker:
     - change watchtower service volumes to match your folder structure 
-      in deploy/docker-compose-dev-env.yml
+      in `deploy/docker-compose-dev-env.yml`
     - run `docker login ghcr.io/robertosannino`  
     - from the deploy folder, run
       `docker-compose -f docker-compose-dev-env.yml` 
 - **PROD** docker    
     - change watchtower service volumes to match your folder structure
-      in deploy/docker-compose-prod.yml
+      in `deploy/docker-compose-prod.yml`
     - run `docker login ghcr.io/robertosannino`  
     - from the deploy folder, run
       `docker-compose -f docker-compose-prod.yml` 
