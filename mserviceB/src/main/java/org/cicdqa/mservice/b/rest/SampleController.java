@@ -14,7 +14,9 @@ public class SampleController {
     }
 
     @GetMapping("/hello/{name}")
-    public String hello(@PathVariable String name) {
+    public String hello(
+            @PathVariable String name
+    ) {
         return MessageUtil.getHelloMessage(name);
     }
 }
