@@ -13,7 +13,7 @@ public class SampleController {
 
     @GetMapping("/home")
     public String homePage() {
-        return MessageUtil.getHomeMessage("A");
+        return MessageUtil.getHomeMessage("A changed");
     }
 
 }
