@@ -12,6 +12,6 @@ public class SampleController {
 
     @GetMapping("/home")
     public String homePage() {
-        return "*** Micro-Service B !!! ***";
+        return "*** Micro-Service B updated!!! ***";
     }
 }

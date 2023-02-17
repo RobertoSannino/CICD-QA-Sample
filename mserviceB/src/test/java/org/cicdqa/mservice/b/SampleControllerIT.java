@@ -31,7 +31,7 @@ class SampleControllerIT {
             .getResponse()
             .getContentAsString();
 
-        Assertions.assertEquals("*** Micro-Service B !!! ***", homePageMessage);
+        Assertions.assertEquals("*** Micro-Service B updated!!! ***", homePageMessage);
     }
 
 }
