@@ -1,10 +1,7 @@
 package org.cicdqa.mservice.a.rest;
 
 import org.cicdqa.mservice.a.util.MessageUtil;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/a")
@@ -15,5 +12,11 @@ public class SampleController {
     public String homePage() {
         return MessageUtil.getHomeMessage("A");
     }
+
+    @GetMapping("/hello/{name}")
+    public String helloMessage(@PathVariable String name) {
+        return MessageUtil.getHelloMessage(name);
+    }
+
 
 }
